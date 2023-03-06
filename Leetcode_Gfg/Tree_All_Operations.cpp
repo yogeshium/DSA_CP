@@ -240,15 +240,139 @@ void postorder_itr(Node* root)
 }
 
 
+//Morris Traversal - Inorder
+void morrisTraverse_Inorder(Node* root)
+{
+    cout<<"\n\n";
+    Node* curr = root;
+    while(curr)
+    {
+        if(curr->left==NULL)
+        {
+            cout<<curr->data<<" ";
+            curr=curr->right;
+        }
+        else
+        {
+            Node* pred = curr->left;
+            while(pred->right!= NULL && pred->right!= curr)
+                pred = pred->right;
 
+
+            if(pred->right == NULL)
+            {
+                pred->right= curr;
+                curr=curr->left;
+            }
+            else
+            {
+                pred->right= NULL;
+                //cout<<curr->data<<" ";
+                curr=curr->right;
+            }
+        }
+    }
+}
+
+
+//Morris Traversal - Preorder
+
+void morrisTraverse_Preorder(Node* root)
+{
+    cout<<"\n\n";
+    Node* curr = root;
+    while(curr)
+    {
+        if(curr->left==NULL)
+        {
+            cout<<curr->data<<" ";
+            curr=curr->right;
+        }
+        else
+        {
+            Node* pred = curr->left;
+            while(pred->right!= NULL && pred->right!= curr)
+                pred = pred->right;
+
+
+            if(pred->right == NULL)
+            {
+                pred->right= curr;
+                cout<<curr->data<<" ";
+                curr=curr->left;
+            }
+            else
+            {
+                pred->right= NULL;
+                curr=curr->right;
+            }
+        }
+    }
+}
+
+
+//Morris Traversal - Postorder
+
+void morrisTraverse_Postorder(Node* root)
+{
+    cout<<"\n\n";
+    vector<int> store;
+    Node* curr = root;
+    while(curr)
+    {
+        if(curr->right==NULL)
+        {
+            store.push_back(curr->data);
+            curr=curr->left;
+        }
+        else
+        {
+            Node* pred = curr->right;
+            while(pred->left!= NULL && pred->left!= curr)
+                pred = pred->left;
+
+
+            if(pred->left == NULL)
+            {
+                pred->left= curr;
+                store.push_back(curr->data);
+                curr=curr->right;
+            }
+            else
+            {
+                pred->left= NULL;
+                curr=curr->left;
+            }
+        }
+    }
+
+    int i=0,j=store.size()-1;
+    while(i<j)
+    {
+        int temp = store[i];
+        store[i]=store[j];
+        store[j]=temp;
+        i++;j--;
+    }
+    for(int i=0;i<store.size();i++)
+        cout<<store[i]<<" ";
+}
+
+
+//1 2 3 4 5 -1 6 8 7 -1 -1 -1 -1 -1 -1 -1 -1
+
+//1 2 4 7 -1 -1 8 9 -1 -1 10 -1 -1 5 -1  -1 3 6 -1 -1 -1
 
 
 int main()
 {
     Node* root = NULL;
-    root = buildTree(root);
-        //1 2 4 7 -1 -1 8 9 -1 -1 10 -1 -1 5 -1  -1 3 6 -1 -1 -1
+    root = buildFromLevelOrderTraversal(root);
 
-    cout<<"\nTree : "<<endl;postorder_itr(root);
+    cout<<"\nTree : "<<endl;
+    postorder(root);
+
+    cout<<"\nTree : "<<endl;
+     morrisTraverse_Postorder(root);
     return 0;
 }
